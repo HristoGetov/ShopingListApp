@@ -21,10 +21,8 @@ import java.util.List;
 
 public class ShoppingListActivity extends AppCompatActivity {
 
-    ArrayList<Integer> ids = new ArrayList<>();
     String name,quantity;
-    ArrayList<String> names = new ArrayList<>();
-    ArrayList<String> qty = new ArrayList<>();
+    ArrayList<Item> items = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,9 +38,7 @@ public class ShoppingListActivity extends AppCompatActivity {
             }
         });
         for(int i = 0; i <allItems.size();i++){
-            names.add(allItems.get(i).getName());
-            qty.add(allItems.get(i).getQty());
-            ids.add(allItems.get(i).getId());
+            items.add(allItems.get(i));
         }
         System.out.println("LOG: " + name + " " + quantity);
         initRecyclerView();
@@ -50,9 +46,14 @@ public class ShoppingListActivity extends AppCompatActivity {
 
     private void initRecyclerView(){
        RecyclerView recyclerView = findViewById(R.id.recycler_view);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(ids,names,qty,this);
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(items,this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+    }
+
+    public void recreate(){
+        this.recreate();
     }
 
     @Override

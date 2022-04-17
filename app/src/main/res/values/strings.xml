@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">ShopingListApp</string>
+    
+    <string-array name="types">
+        <item>кг.</item>
+        <item>г.</item>
+        <item>л.</item>
+        <item>кутии</item>
+        <item>бутилки</item>
+        <item>бр.</item>
+
+
+    </string-array>
 </resources>

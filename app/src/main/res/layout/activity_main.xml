@@ -1,43 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Controllers.MainActivity"
     android:orientation="vertical"
-    android:background="@color/myColor2">
+    android:background="@color/black">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Списък за пазаруване"
+        android:textColor="@color/white"
+        android:textSize="30dp"
+        app:layout_constraintBottom_toTopOf="@+id/imageView4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/imageView4"
         android:layout_width="184dp"
         android:layout_height="143dp"
-        android:layout_marginLeft="100dp"
-        android:layout_marginTop="100dp"
-        android:src="@mipmap/ic_launcher_round" />
+        android:src="@mipmap/ic_launcher_round"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginBottom="160dp"/>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="170dp"
-        android:orientation="horizontal">
-    <Button
-        android:id="@+id/new_item"
-        android:layout_marginLeft="65dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Нов Продукт"
-        android:onClick="openNewItem"
-        />
+        android:layout_marginBottom="200dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent">
 
-    <Button
-        android:id="@+id/list_button"
-        android:layout_marginLeft="30dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Списък"
-        android:onClick="openShoppingList"
-        />
-    </LinearLayout>
-</LinearLayout>
+        <Button
+            android:id="@+id/new_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="openNewItem"
+            android:text="Добави"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/list_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="50dp"/>
+
+        <Button
+            android:id="@+id/list_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="80dp"
+            android:textColor="@color/white"
+            android:onClick="openShoppingList"
+            android:text="Списък"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

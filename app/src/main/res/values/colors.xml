@@ -10,4 +10,8 @@
     <color name="myColor1">#FFFFCC</color>
     <color name="myColor2">#CCFFFF</color>
     <color name="myColor3">#FFCCFF</color>
+    <color name="green">#00FF00</color>
+    <color name="red">#FF0000</color>
+    <color name="yellow">#FFBF00</color>
+    <color name="grey">#36454F</color>
 </resources>

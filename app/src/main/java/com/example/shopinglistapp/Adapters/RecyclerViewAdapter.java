@@ -1,5 +1,6 @@
 package com.example.shopinglistapp.Adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -7,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,24 +21,20 @@ import com.example.shopinglistapp.Controllers.MainActivity;
 import com.example.shopinglistapp.Controllers.ShoppingListActivity;
 import com.example.shopinglistapp.DataBase.ShoppingListDbHelper;
 import com.example.shopinglistapp.Model.Item;
+import com.example.shopinglistapp.Model.Type;
 import com.example.shopinglistapp.R;
 
 import java.util.ArrayList;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>{
 
-    private ArrayList<String> item_names = new ArrayList<>();
-    private ArrayList<String> item_quantities = new ArrayList<>();
-    private ArrayList<Integer> item_ids = new ArrayList<>();
+    private ArrayList<Item> items;
     private Context context;
+    String itemTypeToDisplay;
 
 
-
-
-    public RecyclerViewAdapter(ArrayList<Integer> item_ids, ArrayList<String> item_names, ArrayList<String> item_quantities, Context context) {
-        this.item_ids = item_ids;
-        this.item_names = item_names;
-        this.item_quantities = item_quantities;
+    public RecyclerViewAdapter(ArrayList<Item> items, Context context) {
+        this.items = items;
         this.context = context;
     }
 
@@ -52,17 +50,37 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
 
-        holder.name.setText(item_names.get(position));
-        holder.qty.setText(item_quantities.get(position));
-        Item item = new Item(item_ids.get(position),item_names.get(position),item_quantities.get(position));
+        holder.name.setText(items.get(position).getName());
+        holder.qty.setText(items.get(position).getQty());
+
+        switch (items.get(position).getType().toString()){
+            case "KILO":
+                itemTypeToDisplay = "кг.";
+                break;
+            case "GRAM":
+                itemTypeToDisplay = "г.";
+                break;
+            case "BROI":
+                itemTypeToDisplay = "бр.";
+                break;
+            case "BOTTLE":
+                itemTypeToDisplay = "бутилки";
+                break;
+            case "CAN":
+                itemTypeToDisplay = "кутии";
+                break;
+            case "LITRE":
+                itemTypeToDisplay = "л.";
+                break;
+        }
+
+        holder.type.setText(itemTypeToDisplay);
+        Item item = new Item(items.get(position).getId(),items.get(position).getName(),items.get(position).getQty(),items.get(position).getType());
         ShoppingListDbHelper helper = new ShoppingListDbHelper(context);
         holder.delete.setOnClickListener(view -> {
             helper.deleteItem(item);
-           notifyDataSetChanged();
-           notifyItemRemoved(position);
-            Intent intent = new Intent(view.getContext(),ShoppingListActivity.class);
-            view.getContext().startActivity(intent);
-
+            items.remove(position);
+            notifyDataSetChanged();
         });
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,13 +97,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public int getItemCount() {
-        return item_names.size();
+        return items.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
-        TextView name, qty;
-        private Button delete;
+        TextView name, qty, type;
+        private ImageButton delete;
         private RelativeLayout parentLayout;
 
         public ViewHolder(@NonNull View itemView) {
@@ -94,6 +112,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             parentLayout = itemView.findViewById(R.id.parent_layout);
             name = itemView.findViewById(R.id.item_name);
             qty = itemView.findViewById(R.id.quantity_item);
+            type = itemView.findViewById(R.id.item_type);
             delete = itemView.findViewById(R.id.delete_button);
         }
     }
