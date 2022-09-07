@@ -75,9 +75,7 @@ public class EditItemActivity extends AppCompatActivity implements AdapterView.O
     }
 
     @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
-
-    }
+    public void onNothingSelected(AdapterView<?> adapterView) {}
 
     public void onCancel(View view){
         Intent intent = new Intent(this, ShoppingListActivity.class);

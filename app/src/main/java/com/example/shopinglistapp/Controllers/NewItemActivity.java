@@ -2,7 +2,6 @@ package com.example.shopinglistapp.Controllers;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -10,14 +9,12 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.shopinglistapp.DataBase.ShoppingListDbHelper;
 import com.example.shopinglistapp.Model.Item;
 import com.example.shopinglistapp.Model.Type;
 import com.example.shopinglistapp.R;
-import com.google.android.material.navigation.NavigationBarView;
 
 
 public class NewItemActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
@@ -27,8 +24,7 @@ public class NewItemActivity extends AppCompatActivity implements AdapterView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activiti_new);
-
+        setContentView(R.layout.activity_new);
         Spinner typesSpinner = findViewById(R.id.types_spinner);
         ArrayAdapter<String> typeAdapter = new ArrayAdapter<>(NewItemActivity.this,
                 android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.types));
@@ -43,13 +39,9 @@ public class NewItemActivity extends AppCompatActivity implements AdapterView.On
         EditText nameText = findViewById(R.id.name);
         EditText quantityText = findViewById(R.id.quantity);
         ShoppingListDbHelper helper = new ShoppingListDbHelper(NewItemActivity.this);
-
         Item item = new Item(nameText.getText().toString(),quantityText.getText().toString(),type);
-
         String result = helper.addItem(item);
-
         Toast.makeText(this, result, Toast.LENGTH_SHORT).show();
-
         Intent intent = new Intent(this,MainActivity.class);
         startActivity(intent);
     }
@@ -87,6 +79,5 @@ public class NewItemActivity extends AppCompatActivity implements AdapterView.On
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
-
     }
 }

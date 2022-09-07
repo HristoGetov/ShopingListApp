@@ -59,7 +59,7 @@ public class ShoppingListDbHelper extends SQLiteOpenHelper {
         contentValues.put(QUANTITY_COLUMN,item.getQty());
         contentValues.put(TYPE_COLUMN,item.getType().toString());
         database.insert(ITEMS_TABLE,null,contentValues);
-        return "An item was added!";
+        return "Продуктът е добавен!";
     }
 
     public boolean deleteItem(Item item){
