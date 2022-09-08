@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
         softwareVersion = getSharedPreferences("softwareVersion", MODE_PRIVATE).getFloat("version",1);
         TextView version = findViewById(R.id.software_version);
         version.setText("Version: " + softwareVersion);
+
         AppUpdaterUtils appUpdaterUtils = new AppUpdaterUtils(this)
                 .setUpdateFrom(UpdateFrom.JSON).setUpdateJSON("https://raw.githubusercontent.com/hristogetov/ShopingListApp/master/app/update-changelog.json")
                 //.setUpdateFrom(UpdateFrom.AMAZON)
@@ -44,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
                 .withListener(new AppUpdaterUtils.UpdateListener() {
                     @Override
                     public void onSuccess(Update update, Boolean isUpdateAvailable) {
-                       // Toast.makeText(MainActivity.this,"Software version: " + update.getLatestVersion(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this,"Software version: " + update.getLatestVersion(), Toast.LENGTH_SHORT).show();
                         Log.d("Latest Version", update.getLatestVersion());
                         Log.d("Release notes", update.getReleaseNotes());
                         Log.d("Is update available?", Boolean.toString(isUpdateAvailable));
