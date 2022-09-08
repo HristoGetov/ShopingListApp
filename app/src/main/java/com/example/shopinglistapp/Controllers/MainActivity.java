@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Toast.makeText(this,"Updated to version 1.2", Toast.LENGTH_SHORT).show();
         appUpdateVersion = getSharedPreferences("softwareVersion", Context.MODE_PRIVATE).edit();
         softwareVersion = getSharedPreferences("softwareVersion", MODE_PRIVATE).getFloat("version",1);
 
@@ -40,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
                 .withListener(new AppUpdaterUtils.UpdateListener() {
                     @Override
                     public void onSuccess(Update update, Boolean isUpdateAvailable) {
-
+                        Toast.makeText(MainActivity.this,"Software version: " + update.getLatestVersion(), Toast.LENGTH_SHORT).show();
                         Log.d("Latest Version", update.getLatestVersion());
                         Log.d("Release notes", update.getReleaseNotes());
                         Log.d("Is update available?", Boolean.toString(isUpdateAvailable));
@@ -71,9 +72,6 @@ public class MainActivity extends AppCompatActivity {
                 });
 
         appUpdaterUtils.start();
-
-        Toast.makeText(this,"Updated to version 1.2", Toast.LENGTH_SHORT).show();
-
         Button newItem = findViewById(R.id.new_item);
         newItem.setOnClickListener(new View.OnClickListener() {
             @Override
