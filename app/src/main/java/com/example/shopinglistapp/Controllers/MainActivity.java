@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toast.makeText(this,"Updated to version 2.3", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this,"Updated to version 2.4", Toast.LENGTH_SHORT).show();
         //Log.e("Log", "Update to version 1.4");
         appUpdateVersion = getSharedPreferences("softwareVersion", Context.MODE_PRIVATE).edit();
         softwareVersion = getSharedPreferences("softwareVersion", MODE_PRIVATE).getFloat("version",1);
