@@ -37,11 +37,8 @@ public class MainActivity extends AppCompatActivity {
         version.setText("Version: " + softwareVersion);
 
         AppUpdaterUtils appUpdaterUtils = new AppUpdaterUtils(this)
-                .setUpdateFrom(UpdateFrom.JSON).setUpdateJSON("https://raw.githubusercontent.com/hristogetov/ShopingListApp/master/app/update-changelog.json")
-                //.setUpdateFrom(UpdateFrom.AMAZON)
-                //.setUpdateFrom(UpdateFrom.GITHUB)
-                //.setGitHubUserAndRepo("hristogetov", "ShopingListApp")
-                //...
+                .setUpdateFrom(UpdateFrom.JSON)
+                .setUpdateJSON("https://raw.githubusercontent.com/hristogetov/ShopingListApp/master/app/update-changelog.json")
                 .withListener(new AppUpdaterUtils.UpdateListener() {
                     @Override
                     public void onSuccess(Update update, Boolean isUpdateAvailable) {
@@ -58,17 +55,14 @@ public class MainActivity extends AppCompatActivity {
                                     .setUpdateJSON("https://raw.githubusercontent.com/hristogetov/ShopingListApp/master/app/update-changelog.json")
                                     .setDisplay(Display.DIALOG);//.showEvery(5);
                             appUpdater.setTitleOnUpdateAvailable("Update available")
-                                    .setContentOnUpdateAvailable("Check out the latest version available of my app!")
-                                    .setTitleOnUpdateNotAvailable("Update not available")
-                                    .setContentOnUpdateNotAvailable("No update available. Check for updates again later!")
-                                    .setButtonUpdate("Update now?")
+                                    .setContentOnUpdateAvailable("Check out the latest version available of ShoppingList app!")
+                                    .setButtonUpdate("Update")
                                     .setCancelable(true)
                                     .showAppUpdated(true);
                             appUpdater.start();
                         }
                         Log.e("Version", softwareVersion + "");
                     }
-
                     @Override
                     public void onFailed(AppUpdaterError error) {
                         Log.d("AppUpdater Error", "Something went wrong");
