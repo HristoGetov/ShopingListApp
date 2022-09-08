@@ -2,7 +2,9 @@ package com.example.shopinglistapp.Controllers;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -11,29 +13,66 @@ import android.widget.Toast;
 
 import com.example.shopinglistapp.R;
 import com.github.javiersantos.appupdater.AppUpdater;
+import com.github.javiersantos.appupdater.AppUpdaterUtils;
+import com.github.javiersantos.appupdater.enums.AppUpdaterError;
 import com.github.javiersantos.appupdater.enums.Display;
+import com.github.javiersantos.appupdater.enums.Duration;
 import com.github.javiersantos.appupdater.enums.UpdateFrom;
+import com.github.javiersantos.appupdater.objects.Update;
 
 public class MainActivity extends AppCompatActivity {
 
+    private SharedPreferences.Editor appUpdateVersion;
+    private float softwareVersion;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        appUpdateVersion = getSharedPreferences("softwareVersion", Context.MODE_PRIVATE).edit();
+        softwareVersion = getSharedPreferences("softwareVersion", MODE_PRIVATE).getFloat("version",1);
 
-        Log.e("LOG", "START APP");
-        AppUpdater appUpdater = new AppUpdater(this);
-        appUpdater.setUpdateFrom(UpdateFrom.JSON)
-                .setUpdateJSON("https://raw.githubusercontent.com/hristogetov/ShopingListApp/master/app/update-changelog.json")
-                .setDisplay(Display.DIALOG);//.setDuration(Duration.NORMAL);
-        appUpdater.setTitleOnUpdateAvailable("Update available")
-                .setContentOnUpdateAvailable("Check out the latest version available of my app!")
-                .setTitleOnUpdateNotAvailable("Update not available")
-                .setContentOnUpdateNotAvailable("No update available. Check for updates again later!")
-                .setButtonUpdate("Update now?")
-                .setIcon(R.drawable.ic_launcher_foreground) // Notification icon
-                .setCancelable(false);
-        appUpdater.start();
+        AppUpdaterUtils appUpdaterUtils = new AppUpdaterUtils(this)
+                .setUpdateFrom(UpdateFrom.JSON).setUpdateJSON("https://raw.githubusercontent.com/hristogetov/ShopingListApp/master/app/update-changelog.json")
+                //.setUpdateFrom(UpdateFrom.AMAZON)
+                //.setUpdateFrom(UpdateFrom.GITHUB)
+                //.setGitHubUserAndRepo("hristogetov", "ShopingListApp")
+                //...
+                .withListener(new AppUpdaterUtils.UpdateListener() {
+                    @Override
+                    public void onSuccess(Update update, Boolean isUpdateAvailable) {
+
+                        Log.d("Latest Version", update.getLatestVersion());
+                        Log.d("Release notes", update.getReleaseNotes());
+                        Log.d("Is update available?", Boolean.toString(isUpdateAvailable));
+                        String latestVersion = update.getLatestVersion();
+                        float lateVersion = Float.parseFloat(latestVersion);
+                        if (softwareVersion < lateVersion){
+                            appUpdateVersion.putFloat("version",lateVersion).apply();
+                            AppUpdater appUpdater = new AppUpdater(MainActivity.this);
+                            appUpdater.setUpdateFrom(UpdateFrom.JSON)
+                                    .setUpdateJSON("https://raw.githubusercontent.com/hristogetov/ShopingListApp/master/app/update-changelog.json")
+                                    .setDisplay(Display.DIALOG);//.showEvery(5);
+                            appUpdater.setTitleOnUpdateAvailable("Update available")
+                                    .setContentOnUpdateAvailable("Check out the latest version available of my app!")
+                                    .setTitleOnUpdateNotAvailable("Update not available")
+                                    .setContentOnUpdateNotAvailable("No update available. Check for updates again later!")
+                                    .setButtonUpdate("Update now?")
+                                    .setCancelable(true)
+                                    .showAppUpdated(true);
+                            appUpdater.start();
+                        }
+                        Log.e("Version", softwareVersion + "");
+                    }
+
+                    @Override
+                    public void onFailed(AppUpdaterError error) {
+                        Log.d("AppUpdater Error", "Something went wrong");
+                    }
+                });
+
+        appUpdaterUtils.start();
+
+        Toast.makeText(this,"Updated to version 1.2", Toast.LENGTH_SHORT).show();
 
         Button newItem = findViewById(R.id.new_item);
         newItem.setOnClickListener(new View.OnClickListener() {
@@ -51,7 +90,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-       // Toast.makeText(this,"Updated successfully", Toast.LENGTH_LONG).show();
         getSupportActionBar().hide();
     }
 
