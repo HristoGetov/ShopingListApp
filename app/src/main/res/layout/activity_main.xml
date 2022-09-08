@@ -7,7 +7,15 @@
     tools:context=".Controllers.MainActivity"
     android:orientation="vertical"
     android:background="@color/black">
-
+    <TextView
+        android:id="@+id/software_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Version"
+        android:textColor="@color/white"
+        android:textSize="10sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

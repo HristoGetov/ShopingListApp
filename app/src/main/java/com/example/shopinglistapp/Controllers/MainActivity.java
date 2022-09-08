@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.shopinglistapp.R;
@@ -29,10 +30,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //Toast.makeText(this,"Updated to version 1.3", Toast.LENGTH_SHORT).show();
-        Log.e("Log", "Update to version 1.4");
+        //Log.e("Log", "Update to version 1.4");
         appUpdateVersion = getSharedPreferences("softwareVersion", Context.MODE_PRIVATE).edit();
         softwareVersion = getSharedPreferences("softwareVersion", MODE_PRIVATE).getFloat("version",1);
-
+        TextView version = findViewById(R.id.software_version);
+        version.setText("Version: " + softwareVersion);
         AppUpdaterUtils appUpdaterUtils = new AppUpdaterUtils(this)
                 .setUpdateFrom(UpdateFrom.JSON).setUpdateJSON("https://raw.githubusercontent.com/hristogetov/ShopingListApp/master/app/update-changelog.json")
                 //.setUpdateFrom(UpdateFrom.AMAZON)
@@ -42,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
                 .withListener(new AppUpdaterUtils.UpdateListener() {
                     @Override
                     public void onSuccess(Update update, Boolean isUpdateAvailable) {
-                        Toast.makeText(MainActivity.this,"Software version: " + update.getLatestVersion(), Toast.LENGTH_SHORT).show();
+                       // Toast.makeText(MainActivity.this,"Software version: " + update.getLatestVersion(), Toast.LENGTH_SHORT).show();
                         Log.d("Latest Version", update.getLatestVersion());
                         Log.d("Release notes", update.getReleaseNotes());
                         Log.d("Is update available?", Boolean.toString(isUpdateAvailable));
