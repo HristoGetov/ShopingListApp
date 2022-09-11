@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
                         String latestVersion = update.getLatestVersion();
                         float lateVersion = Float.parseFloat(latestVersion);
                         if (softwareVersion < lateVersion){
+                            Log.e("Log", "Before AppUpdater");
                             AppUpdater appUpdater = new AppUpdater(MainActivity.this);
                             appUpdater.setUpdateFrom(UpdateFrom.JSON)
                                     .setUpdateJSON("https://raw.githubusercontent.com/hristogetov/ShopingListApp/master/app/update-changelog.json")//https://raw.githubusercontent.com/hristogetov/ShopingListApp/master/app/update-changelog.json
@@ -77,7 +78,9 @@ public class MainActivity extends AppCompatActivity {
                                     .setButtonUpdate("Update")
                                     .setCancelable(true)
                                     .showAppUpdated(true);
+                            Log.e("Log", "Before AppUpdater start");
                             appUpdater.start();
+                            Log.e("Log", "After AppUpdater start");
                             appUpdateVersion.putFloat("version",lateVersion).apply();
                         }
                         Log.e("Version", softwareVersion + "");
