@@ -29,47 +29,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toast.makeText(this,"Updated to version 2.4", Toast.LENGTH_SHORT).show();
+       // Toast.makeText(this,"Updated to version 2.4", Toast.LENGTH_SHORT).show();
         //Log.e("Log", "Update to version 1.4");
         appUpdateVersion = getSharedPreferences("softwareVersion", Context.MODE_PRIVATE).edit();
         softwareVersion = getSharedPreferences("softwareVersion", MODE_PRIVATE).getFloat("version",1);
         TextView version = findViewById(R.id.software_version);
         version.setText("Version: " + softwareVersion);
-
-        AppUpdaterUtils appUpdaterUtils = new AppUpdaterUtils(this)
-                .setUpdateFrom(UpdateFrom.JSON)
-                .setUpdateJSON("https://raw.githubusercontent.com/hristogetov/ShopingListApp/master/app/update-changelog.json")
-                .withListener(new AppUpdaterUtils.UpdateListener() {
-                    @Override
-                    public void onSuccess(Update update, Boolean isUpdateAvailable) {
-                       // Toast.makeText(MainActivity.this,"Software version: " + update.getLatestVersion(), Toast.LENGTH_SHORT).show();
-                        Log.d("Latest Version", update.getLatestVersion());
-                        Log.d("Release notes", update.getReleaseNotes());
-                        Log.d("Is update available?", Boolean.toString(isUpdateAvailable));
-                        String latestVersion = update.getLatestVersion();
-                        float lateVersion = Float.parseFloat(latestVersion);
-                        if (softwareVersion < lateVersion){
-                            appUpdateVersion.putFloat("version",lateVersion).apply();
-                            AppUpdater appUpdater = new AppUpdater(MainActivity.this);
-                            appUpdater.setUpdateFrom(UpdateFrom.JSON)
-                                    .setUpdateJSON("https://raw.githubusercontent.com/hristogetov/ShopingListApp/master/app/update-changelog.json")
-                                    .setDisplay(Display.DIALOG);//.showEvery(5);
-                            appUpdater.setTitleOnUpdateAvailable("Update available")
-                                    .setContentOnUpdateAvailable("Check out the latest version available of ShoppingList app!")
-                                    .setButtonUpdate("Update")
-                                    .setCancelable(true)
-                                    .showAppUpdated(true);
-                            appUpdater.start();
-                        }
-                        Log.e("Version", softwareVersion + "");
-                    }
-                    @Override
-                    public void onFailed(AppUpdaterError error) {
-                        Log.d("AppUpdater Error", "Something went wrong");
-                    }
-                });
-
-        appUpdaterUtils.start();
         Button newItem = findViewById(R.id.new_item);
         newItem.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,18 +51,44 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        checkForUpdate();
         getSupportActionBar().hide();
     }
 
-    public void openNewItem(View view){
-        Intent intent = new Intent(this,NewItemActivity.class);
-        startActivity(intent);
-    }
-    public void openShoppingList(View view){
-        Intent intent = new Intent(this,ShoppingListActivity.class);
-        startActivity(intent);
-    }
+    private void checkForUpdate(){
+        Log.e("Log", "Call from checkForUpdate method");
+        AppUpdaterUtils appUpdaterUtils =  new AppUpdaterUtils(this)
+                .setUpdateFrom(UpdateFrom.JSON)
+                .setUpdateJSON("https://raw.githubusercontent.com/hristogetov/ShopingListApp/master/app/update-changelog.json")//
+                .withListener(new AppUpdaterUtils.UpdateListener() {
+                    @Override
+                    public void onSuccess(Update update, Boolean isUpdateAvailable) {
+                        //Toast.makeText(MainActivity.this,"Software version: " + update.getLatestVersion(), Toast.LENGTH_SHORT).show();
+                        String latestVersion = update.getLatestVersion();
+                        float lateVersion = Float.parseFloat(latestVersion);
+                        if (softwareVersion < lateVersion){
+                            AppUpdater appUpdater = new AppUpdater(MainActivity.this);
+                            appUpdater.setUpdateFrom(UpdateFrom.JSON)
+                                    .setUpdateJSON("https://raw.githubusercontent.com/hristogetov/ShopingListApp/master/app/update-changelog.json")//https://raw.githubusercontent.com/hristogetov/ShopingListApp/master/app/update-changelog.json
+                                    .setDisplay(Display.DIALOG);//.showEvery(5);
+                            appUpdater.setTitleOnUpdateAvailable("Update available")
+                                    .setContentOnUpdateAvailable("Check out the latest version available of ShoppingList app!")
+                                    .setButtonUpdate("Update")
+                                    .setCancelable(true)
+                                    .showAppUpdated(true);
+                            appUpdater.start();
+                            appUpdateVersion.putFloat("version",lateVersion).apply();
+                        }
+                        Log.e("Version", softwareVersion + "");
+                    }
 
+                    @Override
+                    public void onFailed(AppUpdaterError error) {
+                        Log.d("AppUpdater Error", "Something went wrong");
+                    }
+                });
+        appUpdaterUtils.start();
+    }
 
     @Override
     public void onBackPressed() {
