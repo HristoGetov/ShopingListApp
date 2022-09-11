@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
                             AppUpdater appUpdater = new AppUpdater(MainActivity.this);
                             appUpdater.setUpdateFrom(UpdateFrom.JSON)
                                     .setUpdateJSON("https://raw.githubusercontent.com/hristogetov/ShopingListApp/master/app/update-changelog.json")//https://raw.githubusercontent.com/hristogetov/ShopingListApp/master/app/update-changelog.json
-                                    .setDisplay(Display.DIALOG);//.showEvery(5);
+                                    .setDisplay(Display.SNACKBAR);//.showEvery(5);
                             appUpdater.setTitleOnUpdateAvailable("Update available")
                                     .setContentOnUpdateAvailable("Check out the latest version available of ShoppingList app!")
                                     .setButtonUpdate("Update")
