@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         //Log.e("Log", "Update to version 1.4");
         appUpdateVersion = getSharedPreferences("softwareVersion", Context.MODE_PRIVATE).edit();
         softwareVersion = getSharedPreferences("softwareVersion", MODE_PRIVATE).getFloat("version",1);
+        checkForUpdate();
         TextView version = findViewById(R.id.software_version);
         version.setText("Version: " + softwareVersion);
         Button newItem = findViewById(R.id.new_item);
@@ -51,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        checkForUpdate();
+
         getSupportActionBar().hide();
     }
 
@@ -63,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
                 .withListener(new AppUpdaterUtils.UpdateListener() {
                     @Override
                     public void onSuccess(Update update, Boolean isUpdateAvailable) {
-                        //Toast.makeText(MainActivity.this,"Software version: " + update.getLatestVersion(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this,"Software version: " + update.getLatestVersion(), Toast.LENGTH_SHORT).show();
                         String latestVersion = update.getLatestVersion();
                         float lateVersion = Float.parseFloat(latestVersion);
                         if (softwareVersion < lateVersion){
