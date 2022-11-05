@@ -1,8 +1,10 @@
 package com.example.shopinglistapp.Controllers;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -12,6 +14,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.shopinglistapp.Globals.AppUpdate;
 import com.example.shopinglistapp.R;
 import com.github.javiersantos.appupdater.AppUpdater;
 import com.github.javiersantos.appupdater.AppUpdaterUtils;
@@ -25,11 +28,14 @@ public class  MainActivity extends AppCompatActivity {
 
     private SharedPreferences.Editor appUpdateVersion;
     private float softwareVersion;
+    private static MainActivity instance;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-       // Toast.makeText(this,"Updated to version 2.4", Toast.LENGTH_SHORT).show();
+        instance = this;
+        Toast.makeText(this,"Success", Toast.LENGTH_SHORT).show();
         //Log.e("Log", "Update to version 1.4");
         appUpdateVersion = getSharedPreferences("softwareVersion", Context.MODE_PRIVATE).edit();
         softwareVersion = getSharedPreferences("softwareVersion", MODE_PRIVATE).getFloat("version",1);
@@ -56,6 +62,11 @@ public class  MainActivity extends AppCompatActivity {
         getSupportActionBar().hide();
     }
 
+    public static MainActivity getInstance() {
+        return instance;
+    }
+
+
     private void checkForUpdate(){
         Log.e("Log", "Call from checkForUpdate method");
         AppUpdaterUtils appUpdaterUtils =  new AppUpdaterUtils(this)
@@ -66,18 +77,27 @@ public class  MainActivity extends AppCompatActivity {
                     public void onSuccess(Update update, Boolean isUpdateAvailable) {
                        // Toast.makeText(MainActivity.this,"Software version: " + update.getLatestVersion(), Toast.LENGTH_SHORT).show();
                         String latestVersion = update.getLatestVersion();
+                        String downloadUrl = update.getUrlToDownload().toString();
                         float lateVersion = Float.parseFloat(latestVersion);
                         if (softwareVersion < lateVersion){
                             Log.e("Log", "Before AppUpdater");
                             AppUpdater appUpdater = new AppUpdater(MainActivity.this);
                             appUpdater.setUpdateFrom(UpdateFrom.JSON)
                                     .setUpdateJSON("https://raw.githubusercontent.com/hristogetov/ShopingListApp/master/app/update-changelog.json")//https://raw.githubusercontent.com/hristogetov/ShopingListApp/master/app/update-changelog.json
-                                    .setDisplay(Display.SNACKBAR);//.showEvery(5);
+                                    .setDisplay(Display.DIALOG);//.showEvery(5);
                             appUpdater.setTitleOnUpdateAvailable("Update available")
                                     .setContentOnUpdateAvailable("Check out the latest version available of ShoppingList app!")
                                     .setButtonUpdate("Update")
+                                    .setButtonUpdateClickListener(new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            AppUpdate.getInstance(MainActivity.this).downloadUpdate(downloadUrl);
+                                            appUpdateVersion.putFloat("version", lateVersion).apply();
+                                        }
+                                    })
                                     .setCancelable(true)
                                     .showAppUpdated(true);
+
                             Log.e("Log", "Before AppUpdater start");
                             appUpdater.start();
                             Log.e("Log", "After AppUpdater start");
@@ -101,4 +121,5 @@ public class  MainActivity extends AppCompatActivity {
         intent.addCategory(Intent.CATEGORY_HOME);
         startActivity(intent);
     }
+
 }
